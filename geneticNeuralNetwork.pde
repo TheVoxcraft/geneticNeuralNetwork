@@ -6,7 +6,7 @@ ArrayList<Creature> creatures;
 
 float whenToReproduce = 10*60;
 int startPopulation = 200;
-int lowPopulation = 50;
+int lowPopulation = 90;
 int popSpark = 2;
 
 void setup(){

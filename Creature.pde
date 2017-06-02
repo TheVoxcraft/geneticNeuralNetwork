@@ -25,10 +25,10 @@ class Creature{
     float[] outputs = brain.run(inputs);
     health -= .001; //health decay
     PVector d = new PVector(0, 0);
-    if(outputs[2] > .5){
+    if(outputs[2] > 0){
       d = new PVector(outputs[0], outputs[1]);
     }
-    if(outputs[3] > .5){
+    if(outputs[3] > 0){
       if(food_board[currentFoodx][currentFoody] > 0){
         food_board[currentFoodx][currentFoody] -= .005;
         health += .001;
