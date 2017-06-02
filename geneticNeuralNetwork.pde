@@ -5,15 +5,15 @@ int food_board_size_y;
 ArrayList<Creature> creatures;
 
 float whenToReproduce = 10*60;
-int startPopulation = 600;
-int lowPopulation = 250;
-int popSpark = 25;
+int startPopulation = 200;
+int lowPopulation = 50;
+int popSpark = 2;
 
 void setup(){
   frameRate(600);
   size(1200, 1000);
   background(0);
-  randomSeed(0);
+  randomSeed(4);
   fill(255);
   creatures = new ArrayList<Creature>();
   food_board_size_x = width/board_size;
@@ -43,11 +43,16 @@ void draw(){
     int j = i-1;
     creatures.get(j).update();
     if(creatures.get(j).health <= 0){creatures.remove(j); }
-    for (int l=creatures.size();l>0;l--) {
-      if((creatures.get(j).getDistance(creatures.get(l-1).pos) < 2) && (creatures.get(j).health > .7) && (creatures.get(l-1).health > .7) && (j!=l-1)){
-        creatures.add(  new Creature(new PVector(random(0,width-400), random(0,height-400)), creatures.get(j).brain.Reproduce(creatures.get(l-1).brain)) );
+  }
+  
+  for (int i=0;i>creatures.size();i++) {
+    int j = i-1;
+    for (int l=0;l>creatures.size();l++) {
+      int k = l-1;
+      if((creatures.get(j).getDistance(creatures.get(k).pos) < 10) && (creatures.get(j).health > .7) && (creatures.get(k).health > .7) && (j!=k)){
+        creatures.add(  new Creature(new PVector(random(0,width-400), random(0,height-400)), creatures.get(j).brain.Reproduce(creatures.get(k).brain)) );
         creatures.get(j).health -= .2;
-        creatures.get(l-1).health -= .2;
+        creatures.get(k).health -= .2;
       }
     }
   }

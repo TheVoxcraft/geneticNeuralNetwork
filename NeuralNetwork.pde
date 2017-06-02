@@ -1,8 +1,8 @@
 class Network{
   
-  int in_size = 4; // get:board-pos, get:health, get:food, get:memory, bias
-  int l1_size = 201; // + 1 bias
-  int l2_size = 201; // + 1 bias
+  int in_size = 5; // get:board-pos, get:health, get:food, get:memory, bias
+  int l1_size = 71; // + 1 bias
+  int l2_size = 71; // + 1 bias
   int out_size = 5; // vector:direction, bool:move, bool:eat, out:memory
   
   float[] in = new float[in_size];
@@ -52,22 +52,25 @@ class Network{
     // Feed forward
     for(int i=0; i < in_size; i++){
       for(int j=0; j < l1_size; j++){
-        l1[j] = in[i]*in_l1[i][j];
+        l1[j] += in[i]*in_l1[i][j];
       }
     }
     for(int i=0; i < l1_size; i++){
+      l1[i] = activation(l1[i]);
       for(int j=0; j < l2_size; j++){
-        l2[j] = l1[i]*l1_l2[i][j];
+        l2[j] += l1[i]*l1_l2[i][j];
       }
+      
     }
     for(int i=0; i < l2_size; i++){
+      l2[i] = activation(l2[i]);
       for(int j=0; j < out_size; j++){
-        out[j] = l2[i]*l2_out[i][j];
+        out[j] += l2[i]*l2_out[i][j];
       }
     }
     
-    for(int i=0; i < out_size; i++){
-      out[i] = tanh(out[i]);
+    for(int j=0; j < out_size; j++){
+        out[j] = activation(out[j]);
     }
     
     return out;
@@ -123,6 +126,17 @@ class Network{
     return (float)Math.tanh(x);
   }
   
+  float activation(float x){
+    return tanh(x);
+  }
+  
+  float RELU(){
+    return 1;
+  }
+  
+  float sigmoid(float x){
+   return 1/(1+pow(2.71828182846,-x));
+  }
   Network(){
     randomizeWeights();
     setBias();
