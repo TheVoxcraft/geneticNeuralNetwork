@@ -43,7 +43,7 @@ class Creature{
   
   void move(PVector _dir){
     PVector dir = _dir.copy();
-    dir.normalize();
+    dir.limit(1);
     dir.mult(speed);
     //PVector b = pos.copy();
     pos.add(dir);
