@@ -7,7 +7,7 @@ ArrayList<Creature> creatures;
 float whenToReproduce = 10*60;
 int startPopulation = 200;
 int lowPopulation = 90;
-int popSpark = 2;
+int popSpark = 0;
 
 void setup(){
   frameRate(600);
@@ -45,30 +45,18 @@ void draw(){
     if(creatures.get(j).health <= 0){creatures.remove(j); }
   }
   
-  for (int i=0;i>creatures.size();i++) {
-    int j = i-1;
-    for (int l=0;l>creatures.size();l++) {
-      int k = l-1;
-      if((creatures.get(j).getDistance(creatures.get(k).pos) < 10) && (creatures.get(j).health > .7) && (creatures.get(k).health > .7) && (j!=k)){
-        creatures.add(  new Creature(new PVector(random(0,width-400), random(0,height-400)), creatures.get(j).brain.Reproduce(creatures.get(k).brain)) );
-        creatures.get(j).health -= .2;
-        creatures.get(k).health -= .2;
-      }
-    }
-  }
-  
   for(int s=0; s < popSpark; s++){
     if(creatures.size() <= lowPopulation){
       // FIND SUTIBLE PARENTS
       Creature p1 = creatures.get((int)random(0, creatures.size()-1));
       Creature p2 = creatures.get((int)random(0, creatures.size()-1));;
-      float highestHP = 0;
+      float highestScore = 0;
       
       for(int i=0; i < creatures.size(); i++){
-        if(creatures.get(i).health > highestHP){
+        if((creatures.get(i).lifetime*creatures.get(i).health) > highestScore){
           p2 = p1;
           p1 = creatures.get(i);
-          highestHP = creatures.get(i).health;
+          highestScore = creatures.get(i).lifetime*creatures.get(i).health;
         }
       }
       

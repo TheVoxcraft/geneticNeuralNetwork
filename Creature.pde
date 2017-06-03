@@ -3,6 +3,7 @@ class Creature{
   float health = 1;
   float speed = 1;
   float mem = 0;
+  int lifetime = 0;
   Network brain;
   Creature(PVector _pos, Network _brain){
     pos = _pos;
@@ -28,6 +29,7 @@ class Creature{
     if(outputs[2] > 0){
       d = new PVector(outputs[0], outputs[1]);
     }
+    
     if(outputs[3] > 0){
       if(food_board[currentFoodx][currentFoody] > 0){
         food_board[currentFoodx][currentFoody] -= .005;
@@ -37,6 +39,21 @@ class Creature{
     mem = outputs[4];
     move(d);
     fill(255);
+    lifetime++;
+    checkReproduce();
+  }
+  
+  void checkReproduce(){
+    for (int l=0;l<creatures.size();l++) {
+      //print(getDistance(creatures.get(k).pos)+"\n");
+      if((getDistance(creatures.get(l).pos) < 2) && (getDistance(creatures.get(l).pos) > 0)){
+        creatures.add(  new Creature(new PVector(random(0,width-400), random(0,height-400)), brain.Reproduce(creatures.get(l).brain)) );
+        health *= .5;
+        creatures.get(l).health *= .5;
+        health *= .5;
+        creatures.get(l).health *= .5;
+      }
+    }
   }
   
   float getDistance(PVector v2){ return pos.dist(v2);}
