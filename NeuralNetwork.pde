@@ -1,9 +1,9 @@
 class Network{
   
-  int in_size = 5; // get:board-pos, get:health, get:food, get:memory, bias
-  int l1_size = 71; // + 1 bias
-  int l2_size = 71; // + 1 bias
-  int out_size = 5; // vector:direction, bool:move, bool:eat, out:memory
+  int in_size = 6; // get:board-pos, get:health, get:food, get:memory, bias
+  int l1_size = 101; // + 1 bias
+  int l2_size = 101; // + 1 bias
+  int out_size = 6; // vector:direction, bool:move, bool:eat, out:memory, bool:reproduce
   
   float[] in = new float[in_size];
   float[] l1 = new float[l1_size];
@@ -14,7 +14,7 @@ class Network{
   float[][] l1_l2 = new float[l1_size][l2_size];
   float[][] l2_out = new float[l2_size][out_size];
   
-  float muationRate = .05;
+  float muationRate = .05; // ADD THIS LATER!
   
   void randomizeWeights(){
     for(int i=0; i < in_size; i++){
@@ -70,51 +70,33 @@ class Network{
     }
     
     for(int j=0; j < out_size; j++){
-        out[j] = activation(out[j]);
+        out[j] = tanh(out[j]);
     }
     
     return out;
   }
   
-  Network Reproduce(Network partner){
+  Network Reproduce(){
     Network child = new Network();
     
     for(int i=0; i < in_size; i++){
       for(int j=0; j < l1_size; j++){
-        float c = random(0.0, 1.0);
-        if(c > .5){
-          child.in_l1[i][j] = partner.in_l1[i][j];
-        } else {
-          child.in_l1[i][j] = in_l1[i][j]; // self
-        }
         if(random(0.0, 1.0) <= muationRate){
-          child.in_l1[i][j] = random(-1.0, 1.0); //print("m");
+          child.in_l1[i][j] = in_l1[i][j]+random(-1.0, 1.0); //print("m");
         }
       }
     }
     for(int i=0; i < l1_size; i++){
       for(int j=0; j < l2_size; j++){
-        float c = random(0.0, 1.0);
-        if(c > .5){
-          child.l1_l2[i][j] = partner.l1_l2[i][j];
-        } else {
-          child.l1_l2[i][j] = l1_l2[i][j]; // self
-        }
         if(random(0.0, 1.0) <= muationRate){
-          child.l1_l2[i][j] = random(-1.0, 1.0);//print("m");
+          child.l1_l2[i][j] = l1_l2[i][j]+random(-1.0, 1.0);//print("m");
         }
       }
     }
     for(int i=0; i < l2_size; i++){
       for(int j=0; j < out_size; j++){
-        float c = random(0.0, 1.0);
-        if(c > .5){
-          child.l2_out[i][j] = partner.l2_out[i][j];
-        } else {
-          child.l2_out[i][j] = l2_out[i][j]; // self
-        }
         if(random(0.0, 1.0) <= muationRate){
-          child.l2_out[i][j] = random(-1.0, 1.0);//print("m");
+          child.l2_out[i][j] = l2_out[i][j]+random(-1.0, 1.0);//print("m");
         }
       }
     }
@@ -130,8 +112,17 @@ class Network{
     return tanh(x);
   }
   
-  float RELU(){
-    return 1;
+  float RELU(float x){
+    if(x<0){
+      return x*.001;
+    }
+    else{
+      return x;
+    }
+  }
+  
+  float myAct(float x){
+    return(tanh(sin(x)/cos(x)));
   }
   
   float sigmoid(float x){

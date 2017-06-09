@@ -5,9 +5,10 @@ class Creature{
   float mem = 0;
   int lifetime = 0;
   Network brain;
-  Creature(PVector _pos, Network _brain){
+  Creature(PVector _pos, Network _brain, float _health){
     pos = _pos;
     brain = _brain;
+    health = _health;
   }
   void display(){
     fill(150, health*190+10, 70);
@@ -24,34 +25,39 @@ class Creature{
                       mem};
                       
     float[] outputs = brain.run(inputs);
-    health -= .001; //health decay
+    health -= .0015; //health decay
     PVector d = new PVector(0, 0);
     if(outputs[2] > 0){
       d = new PVector(outputs[0], outputs[1]);
+      health -= .0005;
     }
     
     if(outputs[3] > 0){
       if(food_board[currentFoodx][currentFoody] > 0){
         food_board[currentFoodx][currentFoody] -= .005;
-        health += .001;
+        health += .002;
       }
+    }
+    if(outputs[5] > 0 && health >= -1){
+      creatures.add(  new Creature(new PVector(random(pos.x-6,pos.x+12), pos.y-6,pos.y+12), brain.Reproduce(),.5));
+      health -= .6;
     }
     mem = outputs[4];
     move(d);
     fill(255);
     lifetime++;
-    checkReproduce();
+    //checkReproduce();
   }
   
   void checkReproduce(){
     for (int l=0;l<creatures.size();l++) {
       //print(getDistance(creatures.get(k).pos)+"\n");
-      if((getDistance(creatures.get(l).pos) < 2) && (getDistance(creatures.get(l).pos) > 0)){
-        creatures.add(  new Creature(new PVector(random(0,width-400), random(0,height-400)), brain.Reproduce(creatures.get(l).brain)) );
+      if((getDistance(creatures.get(l).pos) < 1) && (getDistance(creatures.get(l).pos) > 0)){
+        creatures.add(  new Creature(new PVector(random(0,width-4), random(0,height-4)), brain.Reproduce(),1) );
         health *= .5;
         creatures.get(l).health *= .5;
-        health *= .5;
-        creatures.get(l).health *= .5;
+        health -= .1;
+        creatures.get(l).health -= .1;
       }
     }
   }
@@ -60,7 +66,7 @@ class Creature{
   
   void move(PVector _dir){
     PVector dir = _dir.copy();
-    dir.limit(1);
+    //dir.limit(1);
     dir.mult(speed);
     //PVector b = pos.copy();
     pos.add(dir);

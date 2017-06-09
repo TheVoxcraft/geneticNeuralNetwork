@@ -5,14 +5,14 @@ int food_board_size_y;
 ArrayList<Creature> creatures;
 
 float whenToReproduce = 10*60;
-int startPopulation = 200;
-int lowPopulation = 90;
-int popSpark = 0;
+int startPopulation = 800;
+int lowPopulation = 10;
+int popSpark = 1;
 
 void setup(){
   frameRate(600);
-  size(1200, 1000);
   noStroke();
+  size(1200, 900);
   background(0);
   randomSeed(4);
   fill(255);
@@ -27,7 +27,7 @@ void setup(){
   }
   
   for(int i=0; i<startPopulation; i++){
-    creatures.add(new Creature(new PVector(random(0,width-400), random(0,height-400)), new Network()));
+    creatures.add(new Creature(new PVector(random(0,width-4), random(0,height-4)), new Network(),1));
   }
 }
 
@@ -50,18 +50,16 @@ void draw(){
     if(creatures.size() <= lowPopulation){
       // FIND SUTIBLE PARENTS
       Creature p1 = creatures.get((int)random(0, creatures.size()-1));
-      Creature p2 = creatures.get((int)random(0, creatures.size()-1));;
       float highestScore = 0;
       
       for(int i=0; i < creatures.size(); i++){
         if((creatures.get(i).lifetime*creatures.get(i).health) > highestScore){
-          p2 = p1;
           p1 = creatures.get(i);
           highestScore = creatures.get(i).lifetime*creatures.get(i).health;
         }
       }
       
-      creatures.add(  new Creature(new PVector(random(0,width-400), random(0,height-400)), p1.brain.Reproduce(p2.brain)));
+      creatures.add(  new Creature(new PVector(random(0,width-4), random(0,height-4)), p1.brain.Reproduce(),1));
     }
   }
   fill(255);
