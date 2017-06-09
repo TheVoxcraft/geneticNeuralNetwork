@@ -14,7 +14,7 @@ class Network{
   float[][] l1_l2 = new float[l1_size][l2_size];
   float[][] l2_out = new float[l2_size][out_size];
   
-  float muationRate = .05; // ADD THIS LATER!
+  float muationRate = .05;
   
   void randomizeWeights(){
     for(int i=0; i < in_size; i++){
@@ -46,8 +46,8 @@ class Network{
       in[i] = inputs[i];
     }
     
-    in[0] = map(in[0], 0, food_board_size_x, 0, 1);
-    in[1] = map(in[0], 0, food_board_size_y, 0, 1);
+    in[0] = map(in[0], 0, food_board_size_x, -1, 1);
+    in[1] = map(in[0], 0, food_board_size_y, -1, 1);
     
     // Feed forward
     for(int i=0; i < in_size; i++){
