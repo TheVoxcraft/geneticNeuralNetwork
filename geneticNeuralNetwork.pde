@@ -12,6 +12,7 @@ int popSpark = 0;
 void setup(){
   frameRate(600);
   size(1200, 1000);
+  noStroke();
   background(0);
   randomSeed(4);
   fill(255);
